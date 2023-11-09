@@ -5,6 +5,7 @@ import {Grid, Section} from "cx/widgets";
 import {applyThemeOverrides} from "cx-theme-space-blue";
 import {render} from "@react-email/render";
 import "./index.scss";
+import {Button} from "@react-email/components";
 const emailContext = require.context('../emails', true, /\.js$/);
 
 
@@ -52,11 +53,22 @@ const App = () => (
           ]}
         />
       </Section>
-      <Section mod="well" class="h-full">
+      <Section mod="well" class="h-full relative">
         <iframe
           class="w-[800px] h-full"
           srcDoc-bind="$page.email"
         />
+        <div className="absolute top-2 right-2 z-50">
+          <button class="bg-blue-500 text-white hover:bg-blue-700 font-bold py-2 px-4 rounded"
+                  icon="download"
+                  onClick={
+                    (e, {store}) => {
+                      navigator.clipboard.writeText(store.get('$page.email'));
+                    }
+                  }>
+            Copy HTML
+          </button>
+        </div>
       </Section>
     </main>
   </cx>

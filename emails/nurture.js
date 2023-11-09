@@ -17,7 +17,6 @@ import {
 } from '@react-email/components';
 import * as React from 'react';
 
-const baseUrl = 'https://react-email-demo-ijnnx5hul-resend.vercel.app';
 const loginLink = `https://ijzwizzfjawlixolcuia.supabase.co/storage/v1/object/public/users-profile-images/duckr-logo-removebg-preview.png`;
 export const DuckrEmail = ({
                              username = 'Guillermo',
