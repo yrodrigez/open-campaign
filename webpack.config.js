@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/nurture.js',
   mode: 'development',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -12,7 +12,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test:  /\.(js|ts|tsx)$/,
+        test:  /\.(js|ts|tsx|jsx)$/,
         use: 'babel-loader',
         exclude: /node_modules/
       },

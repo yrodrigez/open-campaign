@@ -1,49 +1,64 @@
 import {Store} from 'cx/data';
-import {Controller} from 'cx/ui';
+import {Controller, KeySelection} from 'cx/ui';
 import {startAppLoop} from "./startAppLoop";
-import {Button, Grid, Section} from "cx/widgets";
-import "./index.scss";
-
+import {Grid, Section} from "cx/widgets";
 import {applyThemeOverrides} from "cx-theme-space-blue";
+import {render} from "@react-email/render";
+import "./index.scss";
+const emailContext = require.context('../emails', true, /\.js$/);
+
 
 applyThemeOverrides();
 
 
+const loadEmailComponents = () => {
+  const keys = emailContext.keys();
+  return keys.map(key => {
+    const EmailComponent = emailContext(key).default;
+    return {
+      name: key.replace('./', '').replace('.js', ''),
+      component: EmailComponent
+    };
+  });
+};
+
 const store = new Store();
-const fakeData = [
-  {id: 1, name: 'John Doe', age: 25, city: 'New York'},
-  {id: 2, name: 'Jane Doe', age: 30, city: 'Los Angeles'},
-  {id: 3, name: 'Michael Smith', age: 35, city: 'Chicago'},
-]
+
 
 class PageController extends Controller {
   onInit() {
     if (super.init) super.init();
-    this.store.init('message', 'Hello, World!');
-    this.store.init('$page.records', fakeData);
+    const components = loadEmailComponents();
+    this.store.init('$page.records', components);
+    this.store.init('$page.selection', components[0].name);
+    this.addTrigger('emailSelection', ['$page.selection'], (selection) => {
+      const Email = components.find(c => c.name === selection).component
+      this.store.set('$page.email', render(<Email />));
+    }, true);
   }
 }
 
 const App = () => (
   <cx>
-    <div controller={PageController}>
-      <h1 text-bind="message"></h1>
-      <Button className="bg-slate-600" onClick={(e, {store}) => {
-        store.set('message', 'Hello, CxJS!');
-      }}>Click me</Button>
+    <main controller={PageController}
+          class="flex-1 flex items-center justify-evenly text-gray-700 font-bold tracking-wide leading-loose gap-2 py-3">
       <Section mod="well">
         <Grid
           records-bind="$page.records"
           style={{width: "100%"}}
+          selection={{type: KeySelection, bind:'$page.selection', keyField: 'name'}}
           columns={[
-            {field: 'id', header: 'ID'},
-            {field: 'name', header: 'Name'},
-            {field: 'age', header: 'Age'},
-            {field: 'city', header: 'City'},
+            {field: 'name', header: 'Name'}
           ]}
         />
       </Section>
-    </div>
+      <Section mod="well" class="h-full">
+        <iframe
+          class="w-[800px] h-full"
+          srcDoc-bind="$page.email"
+        />
+      </Section>
+    </main>
   </cx>
 );
 
@@ -54,6 +69,8 @@ window.addEventListener('resize', () => {
 
 window.addEventListener('load', function () {
   document.body.style.height = window.innerHeight + 'px';
-  startAppLoop(document.getElementById('app'), store, App);
+  const $app = document.getElementById('app');
+  $app.classList.add('w-full', 'h-full', 'flex', 'flex-col');
+  startAppLoop($app, store, App);
 })
 
