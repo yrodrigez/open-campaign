@@ -1,11 +1,14 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const {merge} = require('webpack-merge');
+
 module.exports = {
-  entry: './src',
-  mode: 'development',
+  entry: {
+    app: ['./src/index.js', './src/index.scss']
+  },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '../back/webapp'),
     filename: 'bundle.js'
   },
 
@@ -50,9 +53,5 @@ module.exports = {
       'React': 'react',
     })
   ],
-  devServer: {
-    static: path.join(__dirname, 'dist'),
-    compress: true,
-    port: 9000
-  }
+
 };
