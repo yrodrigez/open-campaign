@@ -2,35 +2,35 @@ import {
   Body,
   Button,
   Container,
-  Column,
   Head,
   Heading,
   Hr,
   Html,
   Img,
-  Link,
   Preview,
-  Row,
   Section,
   Tailwind,
   Text,
-} from '@react-email/components';
-import * as React from 'react';
+}
+// @ts-ignore
+from '@react-email/components';
+
+import React from "react";
 
 const loginLink = `https://ijzwizzfjawlixolcuia.supabase.co/storage/v1/object/public/users-profile-images/duckr-logo-removebg-preview.png`;
 export const DuckrEmail = ({
-                             username = 'Guillermo',
+                             name = "User!",
+                             avatar = "",
                            } = {}) => {
 
   const previewText = `See what you missing out at Duckr!`;
-  const userImage = 'https://lh3.googleusercontent.com/a/ACg8ocLwUXYLCyG65nSwCCp3sEnJ2PhaHetZqLJoiCWOj3xraqXR=s96-c'
   return (
     <Html>
       <Head/>
       <Preview>{previewText}</Preview>
       <Tailwind>
         <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[600px]">
+          <Container className="bg-white border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[600px]">
             <Section className="mt-[32px]">
               <Img
                 src={loginLink}
@@ -45,7 +45,7 @@ export const DuckrEmail = ({
             </Heading>
             <Section className="text-center">
               <Img
-                src={userImage}
+                src={avatar}
                 width="80"
                 height="80"
                 alt="What you're missing out on"
@@ -56,7 +56,7 @@ export const DuckrEmail = ({
               </Text>
             </Section>
             <Text className="text-black text-[14px] leading-[24px]">
-              Hello {username},
+              Hello {name},
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
               You've been missing out on lots of interesting conversations and updates from your friends
