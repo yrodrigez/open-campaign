@@ -1,4 +1,4 @@
-import {BroadLog, EmailProvider, SendEmailData, SendEmailResponse} from "../email-service";
+import {BroadLog, EmailProvider, SendEmailData, SendEmailResponse} from "../../../infrastructure/emailProviders/routing/email-service";
 import {Resend} from "resend";
 
 

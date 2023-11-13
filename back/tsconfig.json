@@ -9,6 +9,6 @@
     "skipLibCheck": true,
     "jsx": "react"
   },
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.{ts,tsx,jsx,js}"],
   "exclude": ["node_modules",]
 }

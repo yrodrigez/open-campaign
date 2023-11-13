@@ -12,10 +12,7 @@ import {
   Tailwind,
   Text,
 }
-// @ts-ignore
 from '@react-email/components';
-
-import React from "react";
 
 const loginLink = `https://ijzwizzfjawlixolcuia.supabase.co/storage/v1/object/public/users-profile-images/duckr-logo-removebg-preview.png`;
 export const DuckrEmail = ({

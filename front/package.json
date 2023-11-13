@@ -17,6 +17,7 @@
     "@react-email/render": "^0.0.9",
     "@react-email/tailwind": "0.0.12",
     "@supabase/supabase-js": "^2.38.4",
+    "axios": "^1.6.1",
     "babel-preset-cx-env": "^21.3.0",
     "cx": "^23.9.1",
     "cx-react": "^17.10.1",

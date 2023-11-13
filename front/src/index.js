@@ -1,10 +1,11 @@
 import {Store} from 'cx/data';
 import {Controller, KeySelection} from 'cx/ui';
 import {startAppLoop} from "./startAppLoop";
-import {Grid, Section} from "cx/widgets";
+import {Grid, Section, TextField, Button} from "cx/widgets";
 import {applyThemeOverrides} from "cx-theme-space-blue";
 import {render} from "@react-email/render";
 import "./index.scss";
+import axios from "axios";
 
 const emailContext = require.context('../emails', true, /\.js$/);
 
@@ -31,8 +32,8 @@ class PageController extends Controller {
     this.store.init('$page.records', components);
     this.store.init('$page.selection', components[0].name);
 
-    if(!this.store.get('emails')){
-      const renders = components.map(({name, component: Email})=>{
+    if (!this.store.get('emails')) {
+      const renders = components.map(({name, component: Email}) => {
         return {
           name,
           html: render(<Email/>)
@@ -53,6 +54,7 @@ const App = () => (
     <main controller={PageController}
           className="flex-1 flex items-center justify-evenly text-gray-700 font-bold tracking-wide leading-loose gap-2 py-3">
       <Section mod="well">
+        <TextField value-bind="$page.to" placeholder="Email to?"/>
         <Grid
           records-bind="$page.records"
           style={{width: "100%"}}
@@ -69,17 +71,28 @@ const App = () => (
         />
         <div className="absolute top-2 right-2 z-50">
           <div className="flex flex-row gap-2">
-            <button className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-2 px-4 rounded flex justify-evenly items-center gap-2">
+            <Button
+
+              mod="primary"
+              onClick={async (e, {store}) => {
+                const html = store.get('$page.email')
+                const to = (store.get('$page.to') || '').split(',')
+                if (!to || !to.length) return alert('Please enter a valid email address')
+                await axios.post('http://localhost:3000/api/send-email', {html, to})
+              }}
+              enabled-expr="{$page.to} && {$page.to.length}"
+            >
               Send proof
-            </button>
-            <button className="bg-blue-500 text-white hover:bg-blue-700 font-bold py-2 px-4 rounded"
-                    onClick={
-                      (e, {store}) => {
-                        navigator.clipboard.writeText(store.get('$page.email'));
-                      }
-                    }>
+            </Button>
+            <Button
+              mod="primary"
+              onClick={
+                (e, {store}) => {
+                  navigator.clipboard.writeText(store.get('$page.email'));
+                }
+              }>
               Copy HTML
-            </button>
+            </Button>
           </div>
         </div>
       </Section>
