@@ -5,9 +5,13 @@
     "rootDir": "./",
     "outDir": "./dist",
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "strict": true,
     "skipLibCheck": true,
-    "jsx": "react"
+    "jsx": "react",
+    "tsx": "react",
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
   },
   "include": ["./**/*.{ts,tsx,jsx,js}"],
   "exclude": ["node_modules",]

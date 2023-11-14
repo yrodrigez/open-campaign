@@ -1,9 +1,10 @@
-import express, {Request, Response} from 'express';
+import * as express from 'express';
+import {Request, Response} from 'express';
 import * as path from 'path';
 import {createClient} from '@supabase/supabase-js'
 
 require('dotenv').config({path: path.resolve(__dirname, '../.env.local')});
-import cors from 'cors';
+import * as cors from 'cors';
 
 const supabaseUrl = process.env.PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.PUBLIC_SUPABASE_ANON_KEY
