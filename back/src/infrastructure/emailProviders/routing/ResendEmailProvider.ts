@@ -1,5 +1,7 @@
-import {BroadLog, EmailProvider, SendEmailData, SendEmailResponse} from "../../../infrastructure/emailProviders/routing/email-service";
-import {Resend} from "resend";
+import {Resend} from 'resend';
+import {EmailRoutingProvider} from "../../../domain/services/routing/EmailRoutingProvider";
+import {SendEmailResponse} from "../../../application/email/SendEmailResponse";
+import {BroadLog, SendEmailData} from "./email-service";
 
 
 const RESEND_ERROR_CODES_BY_KEY = {
@@ -17,23 +19,6 @@ const RESEND_ERROR_CODES_BY_KEY = {
     application_error: 500,
     internal_server_error: 500,
 };
-
-async function executeWithDelay<T>(callbacks: Array<() => Promise<T>>, delay: number): Promise<T[]> {
-    const results: T[] = [];
-
-    for (const callback of callbacks) {
-        const startTime = Date.now();
-        const result = await callback();
-        results.push(result);
-        const elapsedTime = Date.now() - startTime;
-
-        if (elapsedTime < delay) {
-            await new Promise<void>(resolve => setTimeout(resolve, delay - elapsedTime));
-        }
-    }
-
-    return results;
-}
 
 function createError(error: {
     message?: string,
@@ -70,17 +55,35 @@ function createEmailResponse({id, to}: {
     return {id, to}
 }
 
-export default function createResendProvider({apiKey}: {
-    apiKey: string
-}): EmailProvider {
-    const resend = new Resend(apiKey)
+async function executeWithDelay<T>(callbacks: Array<() => Promise<T>>, delay: number): Promise<T[]> {
+    const results: T[] = [];
 
-    async function sendEmail({to, email}: SendEmailData): Promise<SendEmailResponse[]> {
+    for (const callback of callbacks) {
+        const startTime = Date.now();
+        const result = await callback();
+        results.push(result);
+        const elapsedTime = Date.now() - startTime;
+
+        if (elapsedTime < delay) {
+            await new Promise<void>(resolve => setTimeout(resolve, delay - elapsedTime));
+        }
+    }
+
+    return results;
+}
+export class ResendEmailProvider implements EmailRoutingProvider {
+    private resendClient: Resend;
+
+    constructor(apiKey: string) {
+        this.resendClient = new Resend(apiKey);
+    }
+
+    async sendEmail({to, email}: SendEmailData): Promise<SendEmailResponse[]> {
         const tos = Array.isArray(to) ? to : [to]
         const executors = tos.map((to) => {
             return async () => {
                 try {
-                    const {data, error} = await resend.emails.send({
+                    const {data, error} = await this.resendClient.emails.send({
                         from: email.from,
                         to,
                         subject: email.subject,
@@ -108,12 +111,12 @@ export default function createResendProvider({apiKey}: {
         return await executeWithDelay<SendEmailResponse>(executors, 1300)
     }
 
-    async function getEmailsLogs(ids: string[]): Promise<BroadLog[]> {
+    async getEmailLogs(ids: string[]): Promise<BroadLog[]> {
         ids = Array.isArray(ids) ? ids : [ids]
         const executors = ids.map((id) => {
             return async () => {
                 try {
-                    const {data, error} = await resend.emails.get(id);
+                    const {data, error} = await this.resendClient.emails.get(id);
                     if (error) {
                         return createError(error, undefined, id)
                     }
@@ -143,11 +146,4 @@ export default function createResendProvider({apiKey}: {
 
         return executeWithDelay(executors, 0) // no delay required
     }
-
-
-    return {
-        sendEmail,
-        getEmailsLogs,
-    }
 }
-
