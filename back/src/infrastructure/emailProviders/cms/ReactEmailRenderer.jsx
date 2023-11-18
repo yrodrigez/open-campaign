@@ -48,12 +48,12 @@ var ReactEmailRenderer = /** @class */ (function () {
     }
     ReactEmailRenderer.prototype.render = function (emailJson) {
         return __awaiter(this, void 0, void 0, function () {
-            var jsxElement;
+            var Email;
             return __generator(this, function (_a) {
-                jsxElement = this.convertJsonToJsx(emailJson);
+                Email = this.convertJsonToJsx(emailJson);
                 return [2 /*return*/, {
-                        html: (0, render_1.render)(jsxElement),
-                        text: (0, render_1.render)(jsxElement, { plainText: true }),
+                        html: (0, render_1.render)(Email, { pretty: true }),
+                        text: (0, render_1.render)(Email, { plainText: true }),
                     }];
             });
         });
@@ -67,11 +67,12 @@ var ReactEmailRenderer = /** @class */ (function () {
         }
         if (!props.key)
             props.key = (0, uuidv4_1.uuid)();
-        var children = props.children || [];
+        var children = props.children;
+        if (!children)
+            return <Component {...props}/>;
         var childrenElements = typeof children === 'string'
             ? children
-            : (children === null || children === void 0 ? void 0 : children.map(function (child) { return _this.convertJsonToJsx(child); })) || [];
-        // @ts-ignore
+            : (children === null || children === void 0 ? void 0 : children.map(function (child) { return _this.convertJsonToJsx(child); })) || null;
         return <Component {...props}> {childrenElements} </Component>;
     };
     return ReactEmailRenderer;

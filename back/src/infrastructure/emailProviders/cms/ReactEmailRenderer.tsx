@@ -15,27 +15,28 @@ export type EmailJson = {
 
 export class ReactEmailRenderer implements EmailRenderer {
     async render(emailJson: EmailJson): Promise<EmailContent> {
-        const jsxElement = this.convertJsonToJsx(emailJson);
+        const Email = this.convertJsonToJsx(emailJson);
 
         return {
-            html: render(jsxElement, ),
-            text: render(jsxElement, {plainText: true}),
+            html: render(Email, {pretty: true}),
+            text: render(Email, {plainText: true}),
         };
     }
 
     private convertJsonToJsx(emailJson: EmailJson): React.ReactElement {
         const {type, props = {}} = emailJson;
-        const Component = ReactEmailComponents[type as keyof typeof ReactEmailComponents];
+        const Component = ReactEmailComponents[type as keyof typeof ReactEmailComponents] as React.JSXElementConstructor<any>;
         if (!Component) {
             throw new Error(`The component with type ${type} is not available in ReactEmailComponents`);
         }
         if (!props.key) props.key = uuid()
-        const children = props.children || [];
+        const children = props.children;
+        if(!children) return <Component {...props} />;
+
         const childrenElements = typeof children === 'string'
             ? children
-            : children?.map((child: EmailJson) => this.convertJsonToJsx(child)) || [];
+            : children?.map((child: EmailJson) => this.convertJsonToJsx(child)) || null;
 
-        // @ts-ignore
         return <Component {...props}> {childrenElements} </Component>;
     }
 }

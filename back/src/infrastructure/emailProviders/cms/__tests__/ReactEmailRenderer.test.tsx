@@ -78,7 +78,7 @@ describe('ReactEmailRenderer', () => {
 
 
         const result = await renderer.render(emailJson);
-        expect(result.html).toContain('If you have any concerns regarding your account\'s safety, please reply to this email to get in touch with us.');
+        expect(result.html).toContain('If you have any concerns regarding your account&#x27;s safety, please reply to this email to get in touch with us.');
     });
 
     it('should throw an error for an unknown component type', async () => {

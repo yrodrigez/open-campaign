@@ -116,7 +116,7 @@ describe('ReactEmailRenderer', function () {
                     return [4 /*yield*/, renderer.render(emailJson)];
                 case 1:
                     result = _a.sent();
-                    expect(result.html).toContain('If you have any concerns regarding your account\'s safety, please reply to this email to get in touch with us.');
+                    expect(result.html).toContain('If you have any concerns regarding your account&#x27;s safety, please reply to this email to get in touch with us.');
                     return [2 /*return*/];
             }
         });
