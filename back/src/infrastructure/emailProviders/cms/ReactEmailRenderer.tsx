@@ -1,8 +1,9 @@
-import {type EmailRenderer, type EmailContent} from "../../../domain/services/cms/EmailRenderer";
+import {type EmailContent} from "../../../domain/entities/email/cms";
 import {render} from '@react-email/render';
 import * as ReactEmailComponents from '@react-email/components';
 import {uuid} from 'uuidv4';
 import * as React from "react";
+import {type EmailRenderer} from "../../../domain/services/cms/EmailRenderer";
 
 export type EmailJson = {
     type: string;
@@ -28,7 +29,7 @@ export class ReactEmailRenderer implements EmailRenderer {
         }
         if (!props.key) props.key = uuid()
         const children = props.children;
-        if(!children) return <Component {...props} />;
+        if (!children) return <Component {...props} />;
 
         const childrenElements = typeof children === 'string'
             ? children
