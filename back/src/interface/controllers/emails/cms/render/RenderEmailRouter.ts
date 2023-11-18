@@ -13,7 +13,11 @@ router.post('/react', async (req, res) => {
         const renderedEmail = await renderReactEmailUseCase.execute(emailJson);
         res.json({renderedEmail});
     } catch (error) {
-        res.status(500).json({error: error.message});
+        let message: string | unknown = 'unknown error';
+        if (error instanceof Error) {
+            message = error.message || error;
+        }
+        res.status(500).json({error: message});
     }
 });
 

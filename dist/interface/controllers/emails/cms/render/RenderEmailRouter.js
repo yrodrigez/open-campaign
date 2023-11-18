@@ -23,7 +23,11 @@ router.post('/react', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.json({ renderedEmail });
     }
     catch (error) {
-        res.status(500).json({ error: error.message });
+        let message = 'unknown error';
+        if (error instanceof Error) {
+            message = error.message || error;
+        }
+        res.status(500).json({ error: message });
     }
 }));
 exports.default = router;
