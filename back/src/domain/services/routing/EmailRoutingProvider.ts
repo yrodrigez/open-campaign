@@ -1,4 +1,4 @@
-import {SendEmailData} from "../../entities/email/SendEmailData";
+import {SendEmailData} from "../../entities/email/routing/SendEmailData";
 import {SendEmailResponse} from "../../../application/email/SendEmailResponse";
 import {BroadLog} from "../../../application/email/BroadLog";
 

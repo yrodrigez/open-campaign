@@ -1,11 +1,8 @@
-// src/infrastructure/emailRendering/ReactEmailRenderer.ts
-
 import {type EmailRenderer, type EmailContent} from "../../../domain/services/cms/EmailRenderer";
 import {render} from '@react-email/render';
 import * as ReactEmailComponents from '@react-email/components';
 import {uuid} from 'uuidv4';
-// @ts-ignore
-import React from "react";
+import * as React from "react";
 
 export type EmailJson = {
     type: string;

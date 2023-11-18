@@ -1,7 +1,6 @@
 import {Resend} from 'resend';
 import {EmailRoutingProvider} from "../../../domain/services/routing/EmailRoutingProvider";
-import {SendEmailResponse} from "../../../application/email/SendEmailResponse";
-import {BroadLog, SendEmailData} from "./email-service";
+import {SendEmailData, SendEmailResponse, BroadLog} from "../../../domain/entities/email/routing";
 
 
 const RESEND_ERROR_CODES_BY_KEY = {
@@ -71,6 +70,7 @@ async function executeWithDelay<T>(callbacks: Array<() => Promise<T>>, delay: nu
 
     return results;
 }
+
 export class ResendEmailProvider implements EmailRoutingProvider {
     private resendClient: Resend;
 
